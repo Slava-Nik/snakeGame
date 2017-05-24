@@ -88,21 +88,71 @@
 	function update(){
 
 		var gameOver = false;
+		var snakeX;
+		var snakeY;
 
-		var snakeX = snake.position[0][0] + cellSize;
-		var snakeY = snake.position[0][1];
-		var currentCoordinates = [snakeX,snakeY];
+		function move(){
+			switch(snake.direction){
+				case 'right':{
+					snakeX = snake.position[0][0] + cellSize;
+					snakeY = snake.position[0][1];
+					break;
+				}
+				case 'left':{
+					snakeX = snake.position[0][0] - cellSize;
+					snakeY = snake.position[0][1];
+					break;
+				}
+				case 'up':{
+					snakeX = snake.position[0][0];
+					snakeY = snake.position[0][1] - cellSize;
+					break;
+				}
+				case 'down':{
+					snakeX = snake.position[0][0];
+					snakeY = snake.position[0][1] + cellSize;
+					break;
+				}
+			}
+			var currentCoordinates = [snakeX,snakeY];
+			snake.position.unshift(currentCoordinates);
+			snake.position.pop();
+		}
+
+		move();
+
 		
-		snake.position.unshift(currentCoordinates);
-		snake.position.pop();
-
 		//Проверяем условие столкновения
 
-		if(snakeX === 0 || snakeX === canvasWidth || snakeY ===0 || snakeY === canvasHeight){
+		if(snakeX === -cellSize || snakeX === canvasWidth || snakeY === -cellSize || snakeY === canvasHeight){
 			gameOver = true;
 			clearInterval(timerGame);
-		} 
+		}
 
+		window.onkeydown = function(event){
+			switch(event.keyCode){
+				case 37: {
+					if(snake.direction != 'right')
+						snake.direction = 'left';
+					break;
+				}
+				case 38: {
+					if(snake.direction != 'down')
+						snake.direction = 'up';
+					break;
+				}
+				case 39: {
+					if(snake.direction != 'left')
+						snake.direction = 'right';
+					break;
+				}
+				case 40: {
+					if(snake.direction != 'up')
+						snake.direction = 'down';
+					break;
+				}
+			}
+		};
 		return gameOver;
 	}
 
