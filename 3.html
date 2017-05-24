@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>The Slava's snake</title>
+	<style>
+	.container{
+		width: 90%;
+		margin: 0 auto;
+		padding-top: 50px;
+		text-align: center;
+	}
+		canvas{
+			border: 6px solid gray;
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+	<canvas id='canvas' width='500' height='500'>
+		Your browser doesn't support canvas element
+	</canvas>
+</div>	
+
+
+
+<script>
+
+	// Basic tweaks of canvas
+
+	var canvas = null;
+	var ctx = null;
+	var timerGame = null;
+
+	// Basic tweaks of field
+	var cellSize = 25;
+	var canvasWidth = null;
+	var canvasHeight = null;
+
+	// Basic tweaks of snake
+	var snake = null;
+	var snakeColor = 'blue';
+	var snakeLength = 3;
+	var snakeSpeed = 250;
+	var snakePosition = [ [75,100], [50,100], [25,100] ];
+	var snakeDirection = 'right';
+
+
+
+	function initGame(){
+		canvas = document.getElementById('canvas');
+		ctx = canvas.getContext('2d');
+		canvasWidth = ctx.canvas.width;
+		canvasHeight = ctx.canvas.height;
+
+		snake = new Snake();
+
+		draw();
+
+		timerGame = setInterval(animate, snakeSpeed);
+	}
+
+	function blank(){
+		ctx.fillStyle = '#fcfdaf';
+		ctx.fillRect(0,0,canvas.width, canvas.height);
+	}
+
+	function Snake(){
+		this.color = snakeColor;
+		this.length = snakeLength;
+		this.speed = snakeSpeed;
+		this.position = snakePosition;
+		this.direction = snakeDirection;
+		
+	}
+
+	function animate(){
+
+		// if the game has not been finished, continue the drawing (prevents an effect going through walls)
+		var gameOver = update();
+		
+		if(!gameOver){
+			draw();
+		}
+	}
+
+
+	function update(){
+
+		var gameOver = false;
+
+		var snakeX = snake.position[0][0] + cellSize;
+		var snakeY = snake.position[0][1];
+		var currentCoordinates = [snakeX,snakeY];
+		
+		snake.position.unshift(currentCoordinates);
+		snake.position.pop();
+
+		//Проверяем условие столкновения
+
+		if(snakeX === 0 || snakeX === canvasWidth || snakeY ===0 || snakeY === canvasHeight){
+			gameOver = true;
+			clearInterval(timerGame);
+		} 
+
+		return gameOver;
+	}
+
+
+	function draw(){
+
+		ctx.save();
+
+		blank();
+
+		//Рисуем змейку
+		ctx.fillStyle = snake.color;
+		ctx.strokeStyle = 'white';
+		ctx.lineWidth = 2;
+
+		for(var i = 0; i < snake.length; i++){
+			// if( i === 0 ){
+			// 	ctx.fillStyle = 'green';
+			// } else{
+			// 	ctx.fillStyle = snake.color;
+			// }
+			ctx.beginPath();
+			ctx.rect(snake.position[i][0], snake.position[i][1], cellSize, cellSize );
+			ctx.fill();
+			ctx.stroke();
+		}
+	
+		
+
+		ctx.restore();
+		
+	}
+
+
+	initGame();
+
+
+</script>
+</body>
+</html>
