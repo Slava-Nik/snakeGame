@@ -11,6 +11,13 @@
         padding-top: 50px;
         text-align: center;
     }
+    .scores {
+    	width: 500px;
+    	margin: 0 auto;
+    	margin-bottom: 3px;
+    	text-align: right;
+    	font-size: 18px;
+    }
     
     canvas {
         border: 6px solid gray;
@@ -20,6 +27,7 @@
 
 <body>
     <div class="container">
+    	 <p class='scores'>Your result: <span id='result'>0</span></p>
         <canvas id='canvas' width='500' height='500'>
             Your browser doesn't support canvas element
         </canvas>
@@ -30,6 +38,7 @@
     var canvas = null;
     var ctx = null;
     var timerGame = null;
+    var scores = 0;
 
     // Basic tweaks for field
     var cellSize = 25;
@@ -58,6 +67,7 @@
 
 
     function initGame() {
+    	debugger;
         canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
         canvasWidth = ctx.canvas.width;
@@ -82,7 +92,7 @@
         this.color = snakeColor;
         this.length = snakeLength;
         this.speed = snakeSpeed;
-        this.position = snakePosition;
+        this.position = snakePosition.slice();
         this.direction = snakeDirection;
 
     }
@@ -125,6 +135,8 @@
 
         if (!gameOver) {
             draw();
+        }else{
+        	finishGame();
         }
     }
 
@@ -171,16 +183,24 @@
         move();
 
 
-        //Checking a clashing with walls
+        //Checking a clashing with walls and with body
 
         if (snakeX === -cellSize || snakeX === canvasWidth || snakeY === -cellSize || snakeY === canvasHeight) {
             gameOver = true;
             clearInterval(timerGame);
         }
 
+        for(var i = 1; i < snake.position.length; i++){
+        	if(snakeX == snake.position[i][0] &&  snakeY == snake.position[i][1]){
+        		gameOver = true;
+            	clearInterval(timerGame);
+        	}
+        }
+
         //Checking an eating of an apple
         if (apple.position) {
             if (snakeX === apple.position[0] && snakeY === apple.position[1]) {
+                scores++;
                 snake.position.push(tailCoordinates);
                 apple.deleteApple(); //delete an eaten apple
                 apple.createApple(); // create new
@@ -259,10 +279,36 @@
             ctx.stroke();
         }
 
+        //Рисуем очки 
+        var result = document.getElementById('result');
+        result.innerText = scores;
+
 
 
 
         ctx.restore();
+
+    }
+
+    function finishGame(){
+
+    		scores = 0;
+    		clearInterval(timerGame);
+
+  		ctx.save();
+
+		ctx.fillStyle = 'red';
+    		ctx.font = '25px Arial';
+    		ctx.textAlign = 'center';
+    		ctx.fillText('Game Over', canvasWidth/2, canvasHeight/2);
+
+    		
+    		ctx.restore();
+
+    		
+    		window.onkeydown = function(event){
+    			if(event.keyCode == 32 ) initGame();
+    		};
 
     }
 
