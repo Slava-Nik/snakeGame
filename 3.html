@@ -1,195 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>The Slava's snake</title>
-	<style>
-	.container{
-		width: 90%;
-		margin: 0 auto;
-		padding-top: 50px;
-		text-align: center;
-	}
-		canvas{
-			border: 6px solid gray;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <title>The Slava's snake</title>
+    <style>
+    .container {
+        width: 90%;
+        margin: 0 auto;
+        padding-top: 50px;
+        text-align: center;
+    }
+    
+    canvas {
+        border: 6px solid gray;
+    }
+    </style>
 </head>
+
 <body>
-<div class="container">
-	<canvas id='canvas' width='500' height='500'>
-		Your browser doesn't support canvas element
-	</canvas>
-</div>	
+    <div class="container">
+        <canvas id='canvas' width='500' height='500'>
+            Your browser doesn't support canvas element
+        </canvas>
+    </div>
+    <script>
+    // Basic tweaks for canvas
+
+    var canvas = null;
+    var ctx = null;
+    var timerGame = null;
+
+    // Basic tweaks for field
+    var cellSize = 25;
+    var canvasWidth = null;
+    var canvasHeight = null;
+
+    // Basic tweaks for snake
+    var snake = null;
+    var snakeColor = 'blue';
+    var snakeLength = 3;
+    var snakeSpeed = 150;
+    var snakePosition = [
+        [75, 100],
+        [50, 100],
+        [25, 100]
+    ];
+    var snakeDirection = 'right';
+
+    //Basic tweaks for apples
+    var apple = null;
+    var appleColor = 'green';
+    var appleImage = new Image();
+    appleImage.src = 'img/apple.png';
 
 
 
-<script>
 
-	// Basic tweaks of canvas
+    function initGame() {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
+        canvasWidth = ctx.canvas.width;
+        canvasHeight = ctx.canvas.height;
 
-	var canvas = null;
-	var ctx = null;
-	var timerGame = null;
+        snake = new Snake();
 
-	// Basic tweaks of field
-	var cellSize = 25;
-	var canvasWidth = null;
-	var canvasHeight = null;
+        apple = new Apple();
+        apple.createApple();
 
-	// Basic tweaks of snake
-	var snake = null;
-	var snakeColor = 'blue';
-	var snakeLength = 3;
-	var snakeSpeed = 250;
-	var snakePosition = [ [75,100], [50,100], [25,100] ];
-	var snakeDirection = 'right';
+        draw();
 
+        timerGame = setInterval(animate, snakeSpeed);
+    }
 
+    function blank() {
+        ctx.fillStyle = '#fcfdaf';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
-	function initGame(){
-		canvas = document.getElementById('canvas');
-		ctx = canvas.getContext('2d');
-		canvasWidth = ctx.canvas.width;
-		canvasHeight = ctx.canvas.height;
+    function Snake() {
+        this.color = snakeColor;
+        this.length = snakeLength;
+        this.speed = snakeSpeed;
+        this.position = snakePosition;
+        this.direction = snakeDirection;
 
-		snake = new Snake();
+    }
 
-		draw();
+    function Apple() {
+        this.color = appleColor;
+        this.position = null;
 
-		timerGame = setInterval(animate, snakeSpeed);
-	}
+        this.createApple = function() {
 
-	function blank(){
-		ctx.fillStyle = '#fcfdaf';
-		ctx.fillRect(0,0,canvas.width, canvas.height);
-	}
+            var randomX = (Math.floor(Math.random() * ((canvasWidth / cellSize) - 1)) + 1) * cellSize;
+            var randomY = (Math.floor(Math.random() * ((canvasHeight / cellSize) - 1)) + 1) * cellSize;
 
-	function Snake(){
-		this.color = snakeColor;
-		this.length = snakeLength;
-		this.speed = snakeSpeed;
-		this.position = snakePosition;
-		this.direction = snakeDirection;
-		
-	}
+         	var badRandom;
 
-	function animate(){
+            do {
+            	badRandom = false;
+                for (i = 0; i < snake.position.length; i++) {
+                    if (snake.position[i][0] == randomX && snake.position[i][1] == randomY) {
+                        badRandom = true;
+                        randomX = (Math.floor(Math.random() * ((canvasWidth / cellSize) - 1)) + 1) * cellSize;
+                        randomY = (Math.floor(Math.random() * ((canvasHeight / cellSize) - 1)) + 1) * cellSize;
+                    }
+                }
+            }
+            while (badRandom);
 
-		// if the game has not been finished, continue the drawing (prevents an effect going through walls)
-		var gameOver = update();
-		
-		if(!gameOver){
-			draw();
-		}
-	}
+            this.position = [randomX, randomY];
+        };
 
+        this.deleteApple = function() {
+            this.position = null;
+        };
+    }
 
-	function update(){
+    function animate() {
 
-		var gameOver = false;
-		var snakeX;
-		var snakeY;
+        // if the game has not been finished, continue the drawing (prevents an effect going through walls)
+        var gameOver = update();
 
-		function move(){
-			switch(snake.direction){
-				case 'right':{
-					snakeX = snake.position[0][0] + cellSize;
-					snakeY = snake.position[0][1];
-					break;
-				}
-				case 'left':{
-					snakeX = snake.position[0][0] - cellSize;
-					snakeY = snake.position[0][1];
-					break;
-				}
-				case 'up':{
-					snakeX = snake.position[0][0];
-					snakeY = snake.position[0][1] - cellSize;
-					break;
-				}
-				case 'down':{
-					snakeX = snake.position[0][0];
-					snakeY = snake.position[0][1] + cellSize;
-					break;
-				}
-			}
-			var currentCoordinates = [snakeX,snakeY];
-			snake.position.unshift(currentCoordinates);
-			snake.position.pop();
-		}
-
-		move();
-
-		
-		//Проверяем условие столкновения
-
-		if(snakeX === -cellSize || snakeX === canvasWidth || snakeY === -cellSize || snakeY === canvasHeight){
-			gameOver = true;
-			clearInterval(timerGame);
-		}
-
-		window.onkeydown = function(event){
-			switch(event.keyCode){
-				case 37: {
-					if(snake.direction != 'right')
-						snake.direction = 'left';
-					break;
-				}
-				case 38: {
-					if(snake.direction != 'down')
-						snake.direction = 'up';
-					break;
-				}
-				case 39: {
-					if(snake.direction != 'left')
-						snake.direction = 'right';
-					break;
-				}
-				case 40: {
-					if(snake.direction != 'up')
-						snake.direction = 'down';
-					break;
-				}
-			}
-		};
-		return gameOver;
-	}
+        if (!gameOver) {
+            draw();
+        }
+    }
 
 
-	function draw(){
+    function update() {
 
-		ctx.save();
+        var gameOver = false;
+        var snakeX;
+        var snakeY;
+        var tailCoordinates = null;
 
-		blank();
+        function move() {
+            switch (snake.direction) {
+                case 'right':
+                    {
+                        snakeX = snake.position[0][0] + cellSize;
+                        snakeY = snake.position[0][1];
+                        break;
+                    }
+                case 'left':
+                    {
+                        snakeX = snake.position[0][0] - cellSize;
+                        snakeY = snake.position[0][1];
+                        break;
+                    }
+                case 'up':
+                    {
+                        snakeX = snake.position[0][0];
+                        snakeY = snake.position[0][1] - cellSize;
+                        break;
+                    }
+                case 'down':
+                    {
+                        snakeX = snake.position[0][0];
+                        snakeY = snake.position[0][1] + cellSize;
+                        break;
+                    }
+            }
+            var currentCoordinates = [snakeX, snakeY];
+            snake.position.unshift(currentCoordinates);
+            tailCoordinates = snake.position.pop();
+        }
 
-		//Рисуем змейку
-		ctx.fillStyle = snake.color;
-		ctx.strokeStyle = 'white';
-		ctx.lineWidth = 2;
-
-		for(var i = 0; i < snake.length; i++){
-			// if( i === 0 ){
-			// 	ctx.fillStyle = 'green';
-			// } else{
-			// 	ctx.fillStyle = snake.color;
-			// }
-			ctx.beginPath();
-			ctx.rect(snake.position[i][0], snake.position[i][1], cellSize, cellSize );
-			ctx.fill();
-			ctx.stroke();
-		}
-	
-		
-
-		ctx.restore();
-		
-	}
+        move();
 
 
-	initGame();
+        //Checking a clashing with walls
+
+        if (snakeX === -cellSize || snakeX === canvasWidth || snakeY === -cellSize || snakeY === canvasHeight) {
+            gameOver = true;
+            clearInterval(timerGame);
+        }
+
+        //Checking an eating of an apple
+        if (apple.position) {
+            if (snakeX === apple.position[0] && snakeY === apple.position[1]) {
+                snake.position.push(tailCoordinates);
+                apple.deleteApple(); //delete an eaten apple
+                apple.createApple(); // create new
+            }
+        }
 
 
-</script>
+
+
+
+
+        window.onkeydown = function(event) {
+            switch (event.keyCode) {
+                case 37:
+                    {
+                        if (snake.direction != 'right')
+                            snake.direction = 'left';
+                        break;
+                    }
+                case 38:
+                    {
+                        if (snake.direction != 'down')
+                            snake.direction = 'up';
+                        break;
+                    }
+                case 39:
+                    {
+                        if (snake.direction != 'left')
+                            snake.direction = 'right';
+                        break;
+                    }
+                case 40:
+                    {
+                        if (snake.direction != 'up')
+                            snake.direction = 'down';
+                        break;
+                    }
+            }
+        };
+        return gameOver;
+    }
+
+
+    function draw() {
+
+        ctx.save();
+
+        blank();
+
+        //Рисуем змейку
+        ctx.fillStyle = snake.color;
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+
+        for (var i = 0; i < snake.position.length; i++) {
+            if( i === 0 ){
+            	ctx.fillStyle = 'green';
+            } else{
+            	ctx.fillStyle = snake.color;
+            }
+            ctx.beginPath();
+            ctx.rect(snake.position[i][0], snake.position[i][1], cellSize, cellSize);
+
+
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        //Рисуем яблоко
+
+        if (apple.position) {
+            ctx.fillStyle = apple.color;
+            ctx.beginPath();
+            ctx.drawImage(appleImage, apple.position[0],apple.position[1]);
+            ctx.fill();
+            ctx.stroke();
+        }
+
+
+
+
+        ctx.restore();
+
+    }
+
+
+    initGame();
+    </script>
 </body>
+
 </html>
