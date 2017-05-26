@@ -207,21 +207,16 @@
         var gameOver = false;
         var snakeX;
         var snakeY;
-        var tailCoordinates = null;
+        var tailCoordinates = null; 	
+        
 
         //Just horror
-        var imageHorror = new Image();
-        imageHorror.scr = 'img/horror.jpg';
-        
-        function showHorror(){
+      function showHorror(){
 		audio.play();
 		setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
-        	
-        	
-        }
-        if(scores == 5){
-        	showHorror();
-        }
+	}
+
+    
 
         function move() {
             switch (snake.direction) {
@@ -238,9 +233,12 @@
                         break;
                     }
                 case 'up':
-                    {
+                    {	
                         snakeX = snake.position[0][0];
                         snakeY = snake.position[0][1] - cellSize;
+                        if(scores>=13){
+                    		showHorror();
+                    	}
                         break;
                     }
                 case 'down':
