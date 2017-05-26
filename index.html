@@ -124,6 +124,7 @@
      horrorImage.className = 'pic';
 
     var audio = new Audio('music/horror.mp3');
+    audio.volume = 1.0;
 
 
 
@@ -210,11 +211,7 @@
         var tailCoordinates = null; 	
         
 
-        //Just horror
-      function showHorror(){
-		audio.play();
-		setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
-	}
+      
 
     
 
@@ -236,9 +233,6 @@
                     {	
                         snakeX = snake.position[0][0];
                         snakeY = snake.position[0][1] - cellSize;
-                        if(scores>=13){
-                    		showHorror();
-                    	}
                         break;
                     }
                 case 'down':
@@ -295,6 +289,10 @@
                     {
                         if (snake.direction != 'down')
                             snake.direction = 'up';
+                         if(scores>=1){
+                    		audio.play();
+					setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
+                    	}
                         break;
                     }
                 case 'right':
@@ -324,6 +322,10 @@
                     {
                         if (snake.direction != 'down')
                             snake.direction = 'up';
+                         if(scores>=1){
+                    		audio.play();
+					setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
+                    	}
                         break;
                     }
                 case 39:
