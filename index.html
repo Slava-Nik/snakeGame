@@ -276,7 +276,7 @@
         //Checking an eating of an apple
         
         var mobileControls = document.querySelector('.mobileControls');
-        mobileControls.addEventListener('click', handlerMobile);
+        mobileControls.addEventListener('touchstart', handlerMobile);
 
         function handlerMobile(event){
         	var id = event.target.id;
@@ -292,10 +292,6 @@
                     {
                         if (snake.direction != 'down')
                             snake.direction = 'up';
-                         if(scores>=10){
-                    		audio.play();
-					setTimeout(function(){document.body.appendChild(horrorImage);}, 60);
-                    	}
                         break;
                     }
                 case 'right':
@@ -312,6 +308,16 @@
                     }
             }
         }
+
+        mobileControls.onclick = function(event){
+        	var id = event.target.id;
+        	if(scores >= 10){
+        		audio.play();
+			setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
+        	}
+        };
+
+
       
         window.onkeydown = function(event) {
             switch (event.keyCode) {
