@@ -96,6 +96,7 @@
     var ctx = null;
     var timerGame = null;
     var scores = 0;
+    var screenWidth = screen.width;
 
     // Basic tweaks for field
     var cellSize = 25;
@@ -106,7 +107,7 @@
     var snake = null;
     var snakeColor = 'blue';
     var snakeLength = 3;
-    var snakeSpeed = 150;
+    var snakeSpeed = (screenWidth > 500)?150:270;
     var snakePosition = [
         [75, 100],
         [50, 100],
