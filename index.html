@@ -205,7 +205,7 @@
         var snakeY;
         var tailCoordinates = null;
 
-         //Just horror
+        //Just horror
         var imageHorror = new Image();
         imageHorror.scr = 'img/horror.jpg';
         
@@ -218,8 +218,9 @@
         	
         	
         }
-        if(scores == 1){
+        if(scores == 15){
         	showHorror();
+        	gameOver = true;
         }
 
         function move() {
