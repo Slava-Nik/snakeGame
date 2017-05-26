@@ -276,8 +276,8 @@
         //Checking an eating of an apple
         
         var mobileControls = document.querySelector('.mobileControls');
-        mobileControls.addEventListener('touchtart', handlerMobile);
-        
+        mobileControls.addEventListener('touchstart', handlerMobile);
+
         function handlerMobile(event){
         	var id = event.target.id;
         	switch (id) {
