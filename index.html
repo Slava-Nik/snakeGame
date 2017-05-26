@@ -119,6 +119,10 @@
     var appleColor = 'green';
     var appleImage = new Image();
     appleImage.src = 'img/apple.png';
+    var horrorImage = document.createElement('img');
+     horrorImage.src = 'img/horror.jpg';
+     horrorImage.className = 'pic';
+
     var audio = new Audio('music/horror.mp3');
 
 
@@ -210,17 +214,13 @@
         imageHorror.scr = 'img/horror.jpg';
         
         function showHorror(){
-        	var img = document.createElement('img');
-        	img.src = 'img/horror.jpg';
-        	img.className = 'pic';
-					audio.play();
-					setTimeout(function(){document.body.appendChild(img);}, 90);
+		audio.play();
+		setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
         	
         	
         }
-        if(scores == 15){
+        if(scores == 5){
         	showHorror();
-        	gameOver = true;
         }
 
         function move() {
