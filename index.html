@@ -133,6 +133,7 @@
         ctx = canvas.getContext('2d');
         canvasWidth = ctx.canvas.width;
         canvasHeight = ctx.canvas.height;
+        canvas.onclick = null;
 
        
         snake = new Snake();
@@ -289,7 +290,7 @@
                     {
                         if (snake.direction != 'down')
                             snake.direction = 'up';
-                         if(scores>=1){
+                         if(scores>=10){
                     		audio.play();
 					setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
                     	}
@@ -322,7 +323,7 @@
                     {
                         if (snake.direction != 'down')
                             snake.direction = 'up';
-                         if(scores>=1){
+                         if(scores>=13){
                     		audio.play();
 					setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
                     	}
@@ -403,7 +404,7 @@
 		ctx.fillStyle = 'red';
     		ctx.font = '25px Arial';
     		ctx.textAlign = 'center';
-    		ctx.fillText('Game Over', canvasWidth/2, canvasHeight/2);
+    		ctx.fillText('Game Over (Tap to restart)', canvasWidth/2, canvasHeight/2);
 
     		
     		ctx.restore();
@@ -411,6 +412,9 @@
     		
     		window.onkeydown = function(event){
     			if(event.keyCode == 32 ) initGame();
+    		};
+    		canvas.onclick = function(){
+    			initGame();
     		};
 
     }
