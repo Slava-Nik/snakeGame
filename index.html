@@ -34,10 +34,10 @@
 
     .pic{
     	position: absolute;
-    	width: 90%;
-    	height: 95%;
-    	top: 1%;
-    	left: 4%;
+    	width: 100%;
+    	height: 100%;
+    	top: 0%;
+    	left: 0%;
      }
     
     canvas {
@@ -68,13 +68,8 @@
 	    .mobileControls button:nth-child(3){
 	    	margin-right: 65px;
 	    }
-	    .pic{
-	    	width: 100%;
-	    	height: 100%;
-	    	top: 0;
-	    	left: 0;
-	    }
-		}
+	    
+	}
    
     </style>
 </head>
@@ -223,7 +218,7 @@
         	
         	
         }
-        if(scores == 13){
+        if(scores == 1){
         	showHorror();
         }
 
@@ -317,7 +312,7 @@
                     }
             }
 
-        }
+        };
         window.onkeydown = function(event) {
             switch (event.keyCode) {
                 case 37:
