@@ -4,24 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <title>The Slava's snake</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
+    html{
+    	margin: 0;
+    	padding: 0;
+    }
+    body{
+    	margin: 0;
+    	padding: 0;
+    }
+    p{
+    	margin: 0;
+    }
     .container {
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
         padding-top: 50px;
         text-align: center;
     }
     .scores {
-    	width: 500px;
+    	width: 90%;
+    	max-width: 500px;
     	margin: 0 auto;
     	margin-bottom: 3px;
     	text-align: right;
     	font-size: 18px;
     }
+
+    .pic{
+    	position: absolute;
+    	width: 90%;
+    	height: 95%;
+    	top: 1%;
+    	left: 4%;
+     }
     
     canvas {
-        border: 6px solid gray;
+    	margin: 0 auto;
+      border: 6px solid gray;
     }
+    .mobileControls{
+				display: none;
+    }
+		@media(max-width: 800px){
+			.container{
+				padding-top: 8px;
+			}
+				canvas{
+					width: 90%;
+				}
+				.mobileControls{
+					display: block;
+	    		padding-top: 20px;
+	    	 }
+	    .mobileControls button{
+	    	display: inline-block;
+	    	margin-bottom: 10px;
+	    	padding: 11px 20px; 
+	    	font-size:*/ 21px;
+
+	    }
+	    .mobileControls button:nth-child(3){
+	    	margin-right: 65px;
+	    }
+	    .pic{
+	    	width: 100%;
+	    	height: 100%;
+	    	top: 0;
+	    	left: 0;
+	    }
+		}
+   
     </style>
 </head>
 
@@ -31,6 +85,14 @@
         <canvas id='canvas' width='500' height='500'>
             Your browser doesn't support canvas element
         </canvas>
+        <div class="mobileControls">
+        	<button id='up'>Up</button>
+        	<br>
+        	<button id='left'>Left</button>
+        	<button id='right'>Right</button>
+        	<br>
+        	<button id='down'>Down</button>
+        </div>
     </div>
     <script>
     // Basic tweaks for canvas
@@ -62,17 +124,17 @@
     var appleColor = 'green';
     var appleImage = new Image();
     appleImage.src = 'img/apple.png';
-
+    var audio = new Audio('music/horror.mp3');
 
 
 
     function initGame() {
-    	debugger;
         canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
         canvasWidth = ctx.canvas.width;
         canvasHeight = ctx.canvas.height;
 
+       
         snake = new Snake();
 
         apple = new Apple();
@@ -148,6 +210,23 @@
         var snakeY;
         var tailCoordinates = null;
 
+         //Just horror
+        var imageHorror = new Image();
+        imageHorror.scr = 'img/horror.jpg';
+        
+        function showHorror(){
+        	var img = document.createElement('img');
+        	img.src = 'img/horror.jpg';
+        	img.className = 'pic';
+					audio.play();
+					setTimeout(function(){document.body.appendChild(img);}, 90);
+        	
+        	
+        }
+        if(scores == 13){
+        	showHorror();
+        }
+
         function move() {
             switch (snake.direction) {
                 case 'right':
@@ -176,8 +255,16 @@
                     }
             }
             var currentCoordinates = [snakeX, snakeY];
-            snake.position.unshift(currentCoordinates);
-            tailCoordinates = snake.position.pop();
+            snake.position.unshift(currentCoordinates); 
+            if (apple.position) {
+	            if (snakeX === apple.position[0] && snakeY === apple.position[1]) {
+	                scores++;
+	                apple.deleteApple(); //delete an eaten apple
+	                apple.createApple(); // create new
+	            }else{
+	            	tailCoordinates = snake.position.pop();
+	            }
+        }
         }
 
         move();
@@ -193,25 +280,44 @@
         for(var i = 1; i < snake.position.length; i++){
         	if(snakeX == snake.position[i][0] &&  snakeY == snake.position[i][1]){
         		gameOver = true;
-            	clearInterval(timerGame);
+            clearInterval(timerGame);
         	}
         }
 
         //Checking an eating of an apple
-        if (apple.position) {
-            if (snakeX === apple.position[0] && snakeY === apple.position[1]) {
-                scores++;
-                snake.position.push(tailCoordinates);
-                apple.deleteApple(); //delete an eaten apple
-                apple.createApple(); // create new
+        
+        var mobileControls = document.querySelector('.mobileControls');
+        mobileControls.onclick = function(event){
+        	var id = event.target.id;
+        	switch (id) {
+
+                case 'left':
+                    {
+                        if (snake.direction != 'right')
+                            snake.direction = 'left';
+                        break;
+                    }
+                case 'up':
+                    {
+                        if (snake.direction != 'down')
+                            snake.direction = 'up';
+                        break;
+                    }
+                case 'right':
+                    {
+                        if (snake.direction != 'left')
+                            snake.direction = 'right';
+                        break;
+                    }
+                case 'down':
+                    {
+                        if (snake.direction != 'up')
+                            snake.direction = 'down';
+                        break;
+                    }
             }
+
         }
-
-
-
-
-
-
         window.onkeydown = function(event) {
             switch (event.keyCode) {
                 case 37:
@@ -240,6 +346,7 @@
                     }
             }
         };
+
         return gameOver;
     }
 
