@@ -296,25 +296,25 @@
                 case 'left':
                     {
                         if (snake.direction != 'right')
-                            snake.direction = 'left';
+                            snake.nextDirection = 'left';
                         break;
                     }
                 case 'up':
                     {
                         if (snake.direction != 'down')
-                            snake.direction = 'up';
+                            snake.nextDirection = 'up';
                         break;
                     }
                 case 'right':
                     {
                         if (snake.direction != 'left')
-                            snake.direction = 'right';
+                            snake.nextDirection = 'right';
                         break;
                     }
                 case 'down':
                     {
                         if (snake.direction != 'up')
-                            snake.direction = 'down';
+                            snake.nextDirection = 'down';
                         break;
                     }
             }
