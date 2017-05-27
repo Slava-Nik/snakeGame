@@ -114,6 +114,7 @@
         [25, 100]
     ];
     var snakeDirection = 'right';
+    var snakeNextDirection = 'right';
 
     //Basic tweaks for apples
     var apple = null;
@@ -159,6 +160,7 @@
         this.speed = snakeSpeed;
         this.position = snakePosition.slice();
         this.direction = snakeDirection;
+        this.nextDirection = snakeNextDirection;
 
     }
 
@@ -216,10 +218,8 @@
 
       
 
-    
-
-        function move() {
-            switch (snake.direction) {
+     function move() {
+            switch (snake.nextDirection) {
                 case 'right':
                     {
                         snakeX = snake.position[0][0] + cellSize;
@@ -258,6 +258,8 @@
         }
         }
 
+        snake.direction = snake.nextDirection;
+
         move();
 
 
@@ -275,7 +277,7 @@
         	}
         }
 
-        //Checking an eating of an apple
+     
         
         var mobileControls = document.querySelector('.mobileControls');
         mobileControls.addEventListener('touchstart', handlerMobile);
@@ -326,29 +328,29 @@
                 case 37:
                     {
                         if (snake.direction != 'right')
-                            snake.direction = 'left';
+                            snake.nextDirection = 'left';
                         break;
                     }
                 case 38:
                     {
                         if (snake.direction != 'down')
-                            snake.direction = 'up';
+                            snake.nextDirection = 'up';
                          if(scores>=13){
                     		audio.play();
-					setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
+			setTimeout(function(){document.body.appendChild(horrorImage);}, 30);
                     	}
                         break;
                     }
                 case 39:
                     {
                         if (snake.direction != 'left')
-                            snake.direction = 'right';
+                            snake.nextDirection = 'right';
                         break;
                     }
                 case 40:
                     {
                         if (snake.direction != 'up')
-                            snake.direction = 'down';
+                            snake.nextDirection = 'down';
                         break;
                     }
             }
