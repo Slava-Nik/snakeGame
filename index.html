@@ -247,6 +247,23 @@
             }
             var currentCoordinates = [snakeX, snakeY];
             snake.position.unshift(currentCoordinates); 
+
+               //Checking a clashing with walls 
+                 if (snakeX === -cellSize || snakeX === canvasWidth || snakeY === -cellSize || snakeY === canvasHeight) {
+                    gameOver = true;
+                    clearInterval(timerGame);
+                }
+
+               //Checking a clashing  with body
+
+                for(var i = 1; i < snake.position.length; i++){
+                    if(snakeX == snake.position[i][0] &&  snakeY == snake.position[i][1]){
+                        gameOver = true;
+                    clearInterval(timerGame);
+                    }
+                }
+
+                //Checking an eating an aplle
             if (apple.position) {
 	            if (snakeX === apple.position[0] && snakeY === apple.position[1]) {
 	                scores++;
@@ -255,27 +272,17 @@
 	            }else{
 	            	tailCoordinates = snake.position.pop();
 	            }
-        }
-        }
+            }
 
+        }
         snake.direction = snake.nextDirection;
 
         move();
 
+        
 
-        //Checking a clashing with walls and with body
+        
 
-        if (snakeX === -cellSize || snakeX === canvasWidth || snakeY === -cellSize || snakeY === canvasHeight) {
-            gameOver = true;
-            clearInterval(timerGame);
-        }
-
-        for(var i = 1; i < snake.position.length; i++){
-        	if(snakeX == snake.position[i][0] &&  snakeY == snake.position[i][1]){
-        		gameOver = true;
-            clearInterval(timerGame);
-        	}
-        }
 
      
         
