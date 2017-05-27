@@ -47,6 +47,10 @@
     .mobileControls{
         display: none;
     }
+    .button-row{
+        display: flex;
+        justify-content: space-between;
+    }
 		@media(max-width: 800px){
 			.container{
 				padding-top: 8px;
@@ -60,14 +64,11 @@
 	    	 }
 	    .mobileControls button{
 	    	display: inline-block;
-                        min-width: 110px;
+                        min-width: 130px;
 	    	margin-bottom: 10px;
 	    	padding: 12px 30px; 
 	    	font-size:  21px;
 
-	    }
-	    .mobileControls button:nth-child(3){
-	    	margin-right: 90px;
 	    }
 	    
 	}
@@ -84,8 +85,10 @@
         <div class="mobileControls">
         	<button id='up'>Up</button>
         	<br>
+            <div class='button-row'>
         	<button id='left'>Left</button>
         	<button id='right'>Right</button>
+            </div>
         	<br>
         	<button id='down'>Down</button>
         </div>
